@@ -1,6 +1,9 @@
 package trycatch;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Average {
 
@@ -9,6 +12,13 @@ public class Average {
         double sum = 0;
         int count = 0;
 
+        
+        try {
+            int ch = System.in.read();
+        } catch (java.io.IOException ex) {
+            ex.printStackTrace();
+        }
+        
         try {
             while (true) {
                 int number = console.nextInt();
