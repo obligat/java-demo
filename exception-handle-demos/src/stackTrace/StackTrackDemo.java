@@ -12,10 +12,11 @@ public class StackTrackDemo {
 
     static void c() {
         try {
-            b();                        //rethrow root also is beginner
+            b();
         } catch (NullPointerException ex) {
             ex.printStackTrace();
-            throw ex;
+            Throwable t = ex.fillInStackTrace();
+            throw (NullPointerException) t;
         }
     }
 
