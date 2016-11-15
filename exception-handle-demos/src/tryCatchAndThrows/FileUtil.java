@@ -17,6 +17,6 @@ public class FileUtil {
             ex.printStackTrace();
             throw ex;
         }
-        return text.toString();
+       return text.toString();
     }
 }
