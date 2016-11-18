@@ -27,6 +27,7 @@ public class Students {
         students.add(new Student("joy", "D1212"));
         students.add(new Student("lice", "D3312"));
         students.add(new Student("dd", "D5334"));
+        students.add(new Student("dd", "D5334"));
         
         System.out.println(students);
     }
