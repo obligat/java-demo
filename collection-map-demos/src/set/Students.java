@@ -12,6 +12,35 @@ class Student {
         this.number = number;
 
     }
+    
+    @Override
+    public int hashCode(){
+        return Objects.hash(name,number);
+    }
+    
+    @Override
+    public boolean equals(Object obj){
+        if(obj == null){
+        
+        return false;
+        }
+        
+        if(getClass()!= obj.getClass()){
+            return false;
+        }
+        
+        final Student other = (Student) obj;
+        if(!Objects.equals(this.name, other.name)){
+            return false;
+        }
+        
+        if(!Objects.equals(this.number, other.number)){
+            return false;
+        }
+        
+        return true;
+        
+    }
 
     @Override
     public String toString() {
@@ -32,5 +61,3 @@ public class Students {
         System.out.println(students);
     }
 }
-
-//[(joy ,D1212), (lice ,D3312), (dd ,D5334), (dd ,D5334)]
