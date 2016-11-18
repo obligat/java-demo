@@ -32,3 +32,5 @@ public class Students {
         System.out.println(students);
     }
 }
+
+//[(joy ,D1212), (lice ,D3312), (dd ,D5334), (dd ,D5334)]
