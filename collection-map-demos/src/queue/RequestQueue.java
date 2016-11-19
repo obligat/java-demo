@@ -10,25 +10,23 @@ interface Request {
 public class RequestQueue {
 
     public static void main(String[] args) {
-        Queue requests = new LinkedList();
+
+        Queue<Request> requests = new LinkedList<>();
         offerRequestTo(requests);
         process(requests);
     }
 
-    static void offerRequestTo(Queue requests) {
+    static void offerRequestTo(Queue<Request> requests) {
 
         for (int i = 1; i < 6; i++) {
-            Request request = new Request() {
-                public void execute() {
-                    System.out.printf("execute data %f%n", Math.random());
-                }
-            };
-            requests.offer(request);
-        }
 
+            requests.offer(
+                    () -> System.out.printf("execute data %f%n", Math.random())
+            );
+        }
     }
 
-    static void process(Queue requests) {
+    static void process(Queue<Request> requests) {
         while (requests.peek() != null) {
             Request request = (Request) requests.poll();
             request.execute();
