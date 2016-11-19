@@ -8,18 +8,12 @@ public class ForEach {
     public static void main(String[] args) {
         List<String> names = Arrays.asList("Justion", "Kotton", "Moods");
         
-//        JDK8 , Iterable 新增了 forEach() 方法
+//        JDK8 , Iterable 新增了 forEach() 方法  Method Reference
 
-        names.forEach(name->out.println(name));
-        new HashSet(names).forEach(name->out.println(name));
-        new ArrayDeque(names).forEach(name->out.println(name));
+        names.forEach(out::println);
+        new HashSet(names).forEach(out::println);
+        new ArrayDeque(names).forEach(out::println);
     }
-
-//    static void forEach(Iterable iterable) {
-//        for (Object o : iterable) {
-//            System.out.println(o);
-//        }
-//    }
 }
 
 // result:
