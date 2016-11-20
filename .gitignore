@@ -1,3 +1,4 @@
 /input-output-demos/nbproject/
 *.xml
 *.mf
+/input-output-demos/build/
