@@ -10,10 +10,8 @@ public class InterruptedDemo {
             public void run() {
 
                 try {
-
                     Thread.sleep(99999);
                 } catch (InterruptedException ex) {
-
                     System.out.println("I am waked.");
                 }
             }
