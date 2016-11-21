@@ -3,3 +3,4 @@
 *.mf
 /input-output-demos/build/
 /thread-demos/nbproject/
+/thread-demos/build/
