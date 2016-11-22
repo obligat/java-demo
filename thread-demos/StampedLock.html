@@ -1,0 +1,921 @@
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+
+
+  
+
+    
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
+  <meta name="description" content="Java 8 includes a new synchronization mechanism called StampedLock.  It differentiates between exclusive and non-exclusive locks, similar to the ReentrantReadWriteLock.  However, it also allows for optimistic reads, which is not supported by the ReentrantReadWriteLock.  In this newsletter, we look at some idioms on how to use this new synchronizer." />
+  <meta name="keywords" content="java,core java course,core java courses,concurrency,threading, fork-join framework,java performance tuning,java performance,advanced java,dynamic proxy,java threading,java concurrency,java.util.concurrent,java.util.concurrency" />
+  <title>[JavaSpecialists 215] - StampedLock Idioms</title>
+  <link rel="stylesheet" type="text/css" href="/skin/maximum2.css">
+  <link href="http://www.javaspecialists.eu/archive/tjsn.rss" rel="alternate" type="application/rss+xml" title="rss"/>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
+
+  <script type="text/javascript" src="https://iw127.infusionsoft.com/app/webTracking/getTrackingCode?trackingId=a93eafeb2f60f9746a5214299d3ad9f7"></script>
+</head>
+
+
+
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td height="764" class="left"></td>
+<td valign="top" class="main">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="center"><center><a href="http://www.javaspecialists.eu"><img border="0" src="/skin/images2/top_banner_01.jpg" alt="Java Specialists' Java Training Europe" width="438" height="101" /><img border="0" src="/skin/images2/top_banner_02.jpg" alt="home of the java specialists' newsletter" width="437" height="101" /></a></center></td>
+</tr>
+<tr>
+<td height="25" align="center" valign="top">
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+<tr>
+  <td width="190" class="nav_bg"> </td>
+  <td align="center" width="120" height="26" class="nav"><a href="http://www.javaspecialists.eu/index.jsp">Home</a></td>
+  <td align="center" width="120" class="nav"><a href="http://www.javaspecialists.eu/archive/archive.jsp">Newsletter</a></td>
+  <td align="center" width="120" class="nav"><a href="http://www.javaspecialists.eu/courses/inhouse.jsp">Java Training</a></td>
+  <td align="center" width="120" class="nav"><a href="http://www.javaspecialists.eu/services/performance_consulting.jsp">Performance Consulting</a></td>
+  <td align="center" width="120" class="nav"><a href="http://www.javaspecialists.eu/customerhub">CustomerHub</a></td>
+  <td align="center" width="120" class="nav2"><a href="http://www.javaspecialists.eu/contact.jsp">Contact</a></td>
+  <td align="center" width="190" class="nav_bg"> </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td height="638" valign="top">
+<table width="909" border="0" align="center" cellpadding="0" cellspacing="0" class="top_bg">
+<tr>
+<td></td>
+</tr>
+</table>
+<table width="909" border="0" align="center" cellpadding="0" cellspacing="0">
+<tr>
+<td width="706" height="575" valign="top" class="main_bg">
+  <table width="660" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+  <script src="/skin/fade.js" language="JavaScript" type="text/javascript"></script>
+
+  <?xml version="1.0" encoding="UTF-8"?>
+  <p class="newsinfo" align="center"><span class="bigheading">
+      The Java Specialists' Newsletter
+    </span><br/><img src="/skin/images2/arrow_orange2.jpg" height="10" width="30"/>
+    Issue 215<img src="/skin/images2/arrow_orange2.jpg" height="10" width="30"/>2013-12-02<img src="/skin/images2/arrow_orange2.jpg" height="10" width="30"/>
+    Category:
+    <a href="newsletters.jsp?category=Java 8&amp;locale=en_US">Java 8</a><img src="/skin/images2/arrow_orange2.jpg" height="10" width="30"/>
+    Java version: Java 8</p><form name="print" method="post" action="/print.do"><input name="issue" type="hidden" value="215"/><input name="locale" type="hidden" value="en_US"/><p class="newsinfo" align="center"><a href="https://github.com/kabutz/javaspecialists/">
+      GitHub
+    </a><img src="/skin/images2/icon_email.jpg" height="14" width="20"/><a href="http://www.javaspecialists.eu/archive/subscribe.jsp">
+      Subscribe Free
+    </a><img src="/skin/images2/icon_rss.jpg" height="14" width="15"/><a href="/archive/tjsn.rss">
+      RSS Feed
+    </a><input submit="issue" type="submit" value="Print"/></p></form><center><h1>StampedLock Idioms</h1></center><center>by Dr. Heinz M. Kabutz</center><center><b>Abstract:</b><br/>Java 8 includes a new synchronization mechanism called StampedLock.  It differentiates between exclusive and non-exclusive locks, similar to the ReentrantReadWriteLock.  However, it also allows for optimistic reads, which is not supported by the ReentrantReadWriteLock.  In this newsletter, we look at some idioms on how to use this new synchronizer.</center><br/><div align="center"><img src="/skin/images2/pixle_gr.jpg" height="1" width="90%"/></div>
+
+  <p>
+    Welcome to the 215th issue of <b>The Java(tm) Specialists' Newsletter</b>, sent from the Island
+    of Crete.  As you would probably have heard by now, Greece is
+    in a state of crisis.  Lots of my friends have lost jobs or
+    have had their hours reduced.  On one of my flights, I
+    learned about a great new program called "<a href="http://www.boroume.gr/en/" target="_blank">Boroume</a>" - meaning
+    "we can".  It connects those with excess food (bakeries, 
+    hotels, restaurants, supermarkets) with those that have a 
+    need for food (orphanages, old-age homes, shelters).  Thus
+    instead of the perfectly good yesterday's bread being thrown
+    away, it can now be consumed by someone in need.  They seem
+    to run a lean operation, meaning they do not need lots of
+    funds to get a lot done.  I sent a little bit and was
+    overwhelmed by their response.  I like clever projects like
+    this, that maximize the available resources we have in our
+    country.
+  </p>
+
+  <p>
+    Please note that I will present a free webinar about this
+    newsletter on Friday the 6th December 2013 at 08:00 UTC.  I
+    expect it to take about 30 minutes, but it might take longer
+    if we get lots of interesting questions.  Usually this talk
+    results in fascinating discussions.  I will make a recording
+    available afterwards.  Please join me if you'd like to hear
+    more or would like to ask some questions.  <a href="/webinars/stampedlock2013-12-06.jsp">Simply click
+    here</a>, fill in your name and email address and you
+    will automatically be registered.  You will also be invited
+    to the next two free webinars about the StampedLock.
+  </p>
+
+  <p><b><FONT COLOR="#FF0000">NEW:</FONT></b>
+    We have revised our "Advanced Topics" course, covering Reflection, Java NIO, Data Structures, Memory Management and several other useful topics for Java experts to master.  2 days of extreme fun and learning.  <a href="http://www.javaspecialists.eu/courses/xj-adv.jsp">Extreme Java - Advanced Topics</a>.
+    <br/></p><h3>StampedLock</h3>
+
+  <p>
+    As you should know by now, I have a keen interest in
+    concurrency. Even before I wrote the <a href="/courses/concurrency.jsp">Concurrency Specialist
+    Course</a>, I was doing research for this newsletter.
+    For example, I showed in <a href="Issue165.html">2008 how the
+    ReadWriteLock could starve certain threads</a>. In
+    Java 5, the writers were starved and in Java 6, a single
+    reader with many writers could go hungry for CPU cycles. The
+    Java 5 flaw can easily be explained, but the reader
+    starvation was not so obvious and could only be seen with
+    careful experimentation.
+  </p>
+
+  <p>
+    The idioms for the ReentrantLock and ReentrantReadWriteLock
+    are quite similar.
+  </p>
+
+  <pre>
+Lock lock = <b><FONT COLOR="#000080">new</FONT></b> ReentrantLock();
+
+...
+
+lock.lock();
+<b><FONT COLOR="#000080">try</FONT></b> {
+  <i><FONT COLOR="808080">// do something that needs exclusive access</FONT></i>
+} <b><FONT COLOR="#000080">finally</FONT></b> {
+  lock.unlock();
+}
+  </pre>
+
+  <p>
+    And here is the ReentrantReadWriteLock:
+  </p>
+
+  <pre>
+ReadWriteLock rwlock = <b><FONT COLOR="#000080">new</FONT></b> ReentrantReadWriteLock();
+
+...
+
+rwlock.writeLock().lock();
+<b><FONT COLOR="#000080">try</FONT></b> {
+  <i><FONT COLOR="808080">// do something that needs exclusive access</FONT></i>
+} <b><FONT COLOR="#000080">finally</FONT></b> {
+  rwlock.writeLock().unlock();
+}
+  </pre>
+
+  <p>
+    Even though these idioms were straightforward, a lot of
+    programmers still got them wrong.  Even books and articles
+    had incorrect idioms.  For example, some wrote the lock()
+    method call into the try block.  Or they did not have a
+    finally block to do the unlocking.  Using synchronized was so
+    much easier, as the locking/unlocking was ensured by the
+    syntax of the language.
+  </p>
+
+  <p>
+    The ReentrantReadWriteLock had a lot of shortcomings: It
+    suffered from starvation. You could not upgrade a read lock
+    into a write lock. There was no support for optimistic reads.
+    Programmers "in the know" mostly avoided using them.
+  </p>
+
+  <p>
+    Doug Lea's new Java 8 StampedLock addresses all these
+    shortcomings.  With some clever code idioms we can also get
+    better performance.  Instead of the usual locking, it returns
+    a long number whenever a lock is granted.  This stamp number
+    is then used to unlock again.  For example, here is how the
+    code above would look:
+  </p>
+
+  <pre>
+StampedLock sl = <b><FONT COLOR="#000080">new</FONT></b> StampedLock();
+
+...
+
+<b><FONT COLOR="#000080">long</FONT></b> stamp = sl.writeLock();
+<b><FONT COLOR="#000080">try</FONT></b> {
+  <i><FONT COLOR="808080">// do something that needs exclusive access</FONT></i>
+} <b><FONT COLOR="#000080">finally</FONT></b> {
+  sl.unlockWrite(stamp);
+}
+  </pre>
+
+  <p>
+    This still begs the question - why do we need this in the
+    first place?  Let's take a slightly larger example and write
+    it with different approaches: synchronized,
+    synchronized/volatile, ReentrantLock, ReentrantReadWriteLock
+    and StampedLock.  Lastly we will show how the immutable
+    approach.
+  </p>
+
+  <h4>BankAccount Without Any Synchronization</h4>
+
+  <p>
+    Our first BankAccount has no synchronization at all.  It also
+    does not check that the amounts being deposited and withdrawn
+    are positive.  We will leave out argument checking in our
+    code.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccount {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccount(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance += amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance -= amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">return</FONT></b> balance;
+  }
+}
+  </pre>
+
+  <h4>Synchronized BankAccount</h4>
+
+  <p>
+    The second version uses the <code><b><FONT COLOR="#000080">synchronized</FONT></b></code>
+    keyword to protect the methods from being called
+    simultaneously by multiple threads on the same BankAccount
+    object.  We could either synchronize on "this" or on a
+    private field.  For our example, this would not make a
+    difference.  In this approach a thread would not be able to
+    read the balance whilst another thread is depositing money.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountSynchronized {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountSynchronized(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance += amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance -= amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">return</FONT></b> balance;
+  }
+}
+  </pre>
+
+  <h4>Synchronized Volatile BankAccount</h4>
+
+  <p>
+    The third version uses a combination of the <code><b><FONT COLOR="#000080">volatile</FONT></b></code>
+    and <code><b><FONT COLOR="#000080">synchronized</FONT></b></code>
+    keywords.  Only one thread at a time can update the balance,
+    but another thread could read the balance in the middle of
+    an update.  The volatile modifier is absolutely necessary,
+    since the value might get cached by a thread and so they
+    would not necessarily see the latest value.  Also, since it
+    is a 64-bit value, it could get set in two operations on a
+    32-bit JVM, leading to impossible values.  However, this is
+    a very good solution, as it gives us fast reads and is easy
+    to write and understand.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountSynchronizedVolatile {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">volatile</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountSynchronizedVolatile(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance += amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance -= amount;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">return</FONT></b> balance;
+  }
+}
+  </pre>
+
+  <h4>ReentrantLock BankAccount</h4>
+
+  <p>
+    The fourth version is similar to the BankAccountSynchronized,
+    except that we are using explicit locks.  So what is "better"
+    - ReentrantLock or synchronized?  As you can see below, it is
+    a lot more effort to code the ReentrantLock.  In Java 5, the
+    performance of <i>contended</i> ReentrantLocks was a lot
+    better than synchronized.  However, synchronized was greatly
+    improved for Java 6, so that now the difference is minor.
+    In addition, <i>uncontended</i> synchronized locks can
+    sometimes be automatically optimized away at runtime, leading
+    to great peformance improvements over ReentrantLock.  The
+    only reason to use ReentrantLock nowadays is if you'd like to
+    use the more advanced features such as better timed waits,
+    tryLock, etc.  Performance is no longer a good reason.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">import</FONT></b> java.util.concurrent.locks.*;
+
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountReentrantLock {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> Lock lock = <b><FONT COLOR="#000080">new</FONT></b> ReentrantLock();
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountReentrantLock(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    lock.lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance += amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.unlock();
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    lock.lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance -= amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.unlock();
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    lock.lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      <b><FONT COLOR="#000080">return</FONT></b> balance;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.unlock();
+    }
+  }
+}
+  </pre>
+
+
+  <h4>ReentrantReadWriteLock BankAccount</h4>
+
+  <p>
+    The fifth version uses the ReentrantReadWriteLock, which
+    differentiates between <i>exclusive</i> and
+    <i>non-exclusive</i> locks.  In both cases, the locks are
+    pessimistic.  This means that if a thread is currently
+    holding the write lock, then any reader thread will get
+    suspended until the write lock is released again.  It is thus
+    different to the BankAccountSynchronizedVolatile version,
+    which would allow us to read the balance whilst we were busy
+    updating it.  However, the overhead of using a
+    ReentrantReadWriteLock is substantial.  As a ballpark figure,
+    we need the read lock to execute for about 2000 clock cycles
+    in order to win back the cost of using it.  In our case the
+    getBalance() method does substantially less, so we would
+    probably be better off just using a normal ReentrantLock.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">import</FONT></b> java.util.concurrent.locks.*;
+
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountReentrantReadWriteLock {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> ReadWriteLock lock = <b><FONT COLOR="#000080">new</FONT></b> ReentrantReadWriteLock();
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountReentrantReadWriteLock(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    lock.writeLock().lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance += amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.writeLock().unlock();
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    lock.writeLock().lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance -= amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.writeLock().unlock();
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    lock.readLock().lock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      <b><FONT COLOR="#000080">return</FONT></b> balance;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      lock.readLock().unlock();
+    }
+  }
+}
+  </pre>
+
+  <h4>StampedLock BankAccount</h4>
+
+  <p>
+    Our sixth version uses StampedLock.  I have written two
+    getBalance() methods.  The first uses pessimistic read locks,
+    the other optimistic.  In our case, since there are no
+    invariants on the fields that would somehow restrict the
+    values, we never need to have a pessimistic lock.  Thus
+    the optimistic read is only to ensure memory visibility, much
+    like the BankAccountSynchronizedVolatile approach.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">import</FONT></b> java.util.concurrent.locks.*;
+
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountStampedLock {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> StampedLock sl = <b><FONT COLOR="#000080">new</FONT></b> StampedLock();
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountStampedLock(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.writeLock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance += amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      sl.unlockWrite(stamp);
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.writeLock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      balance -= amount;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      sl.unlockWrite(stamp);
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.readLock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      <b><FONT COLOR="#000080">return</FONT></b> balance;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      sl.unlockRead(stamp);
+    }
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalanceOptimisticRead() {
+    <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.tryOptimisticRead();
+    <b><FONT COLOR="#000080">long</FONT></b> balance = <b><FONT COLOR="#000080">this</FONT></b>.balance;
+    <b><FONT COLOR="#000080">if</FONT></b> (!sl.validate(stamp)) {
+      stamp = sl.readLock();
+      <b><FONT COLOR="#000080">try</FONT></b> {
+        balance = <b><FONT COLOR="#000080">this</FONT></b>.balance;
+      } <b><FONT COLOR="#000080">finally</FONT></b> {
+        sl.unlockRead(stamp);
+      }
+    }
+    <b><FONT COLOR="#000080">return</FONT></b> balance;
+  }
+}
+  </pre>
+
+  <p>
+    In our getBalanceOptimisticRead(), we could retry several
+    times.  However, as I said before, if memory visibility is
+    all we care about, then StampedLock is overkill.
+  </p>
+
+  <h4>Immutable BankAccount</h4>
+
+  <p>
+    Our seventh version has an immutable BankAccount.  Whenever
+    we need to change the balance, we create a new account.  Most
+    Java programmers have a knee-jerk reaction to this: "Ah, but
+    this will create too many objects!"  This might be true.
+    However, contended ReentrantLocks also create objects.  Thus
+    this argument is not always valid.  You might be better off
+    using a non-blocking algorithm that simply creates a new
+    account and writes it into an AtomicReference using a
+    CompareAndSwap (CAS).
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountImmutable {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountImmutable(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = balance;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountImmutable deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">new</FONT></b> BankAccountImmutable(balance + amount);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountImmutable withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">new</FONT></b> BankAccountImmutable(balance - amount);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">return</FONT></b> balance;
+  }
+}
+  </pre>
+
+
+  <h4>Atomic BankAccount</h4>
+
+  <p>
+    We need an eigth version, just to satisfy the naysayers who
+    want to see an atomic solution.  Here we could either store
+    the balance inside an AtomicLong or inside a volatile long
+    and then use an AtomicLongFieldUpdater or Unsafe to set the
+    field using a CAS.
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">import</FONT></b> java.util.concurrent.atomic.*;
+
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> BankAccountAtomic {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> AtomicLong balance;
+
+  <b><FONT COLOR="#000080">public</FONT></b> BankAccountAtomic(<b><FONT COLOR="#000080">long</FONT></b> balance) {
+    <b><FONT COLOR="#000080">this</FONT></b>.balance = <b><FONT COLOR="#000080">new</FONT></b> AtomicLong(balance);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> deposit(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance.addAndGet(amount);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> withdraw(<b><FONT COLOR="#000080">long</FONT></b> amount) {
+    balance.addAndGet(-amount);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">long</FONT></b> getBalance() {
+    <b><FONT COLOR="#000080">return</FONT></b> balance.get();
+  }
+}
+  </pre>
+
+
+  <h4>W H Y ???</h4>
+
+  <p>
+    We have many ways to write similar type of code.  In our very
+    simple BankAccount example, the
+    BankAccountSynchronizedVolatile and BankAccountAtomic
+    solutions are both simple and work very well.  However, if
+    we had multiple fields and/or an invariant over the field,
+    we would need a slightly stronger mechanism.  Let's take for
+    example a point on a plane, consisting of an "x" and a "y".
+    If we move in a diagonal line, we want to update the x and y
+    in an atomic operation.  Thus a moveBy(10,10) should never
+    expose a state where x has moved by 10, but y is still at the
+    old point.  The fully synchronized approach would work, as
+    would the ReentrantLock and ReentrantReadWriteLock.  However,
+    all of these are pessimistic.  How can we read state in an
+    optimistic approach, expecting to see the correct values?
+  </p>
+
+  <p>
+    Let's start by defining a simple Point class that is
+    synchronized and has three methods for reading and
+    manipulating the state:
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">class</FONT></b> Point {
+  <b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">int</FONT></b> x, y;
+
+  <b><FONT COLOR="#000080">public</FONT></b> Point(<b><FONT COLOR="#000080">int</FONT></b> x, <b><FONT COLOR="#000080">int</FONT></b> y) {
+    <b><FONT COLOR="#000080">this</FONT></b>.x = x;
+    <b><FONT COLOR="#000080">this</FONT></b>.y = y;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> move(<b><FONT COLOR="#000080">int</FONT></b> deltaX, <b><FONT COLOR="#000080">int</FONT></b> deltaY) {
+    x += deltaX;
+    y += deltaY;
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">double</FONT></b> distanceFromOrigin() {
+    <b><FONT COLOR="#000080">return</FONT></b> Math.hypot(x, y);
+  }
+
+  <b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">synchronized</FONT></b> <b><FONT COLOR="#000080">boolean</FONT></b> moveIfAt(<b><FONT COLOR="#000080">int</FONT></b> oldX, <b><FONT COLOR="#000080">int</FONT></b> oldY,
+                                       <b><FONT COLOR="#000080">int</FONT></b> newX, <b><FONT COLOR="#000080">int</FONT></b> newY) {
+    <b><FONT COLOR="#000080">if</FONT></b> (x == oldX &amp;&amp; y == oldY) {
+      x = newX;
+      y = newY;
+      <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">true</FONT></b>;
+    } <b><FONT COLOR="#000080">else</FONT></b> {
+      <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">false</FONT></b>;
+    }
+  }
+}
+  </pre>
+
+  <p>
+    If we use a StampedLock, our move() method look similar to
+    the BankAccountStampedLock.deposit():
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">void</FONT></b> move(<b><FONT COLOR="#000080">int</FONT></b> deltaX, <b><FONT COLOR="#000080">int</FONT></b> deltaY) {
+  <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.writeLock();
+  <b><FONT COLOR="#000080">try</FONT></b> {
+    x += deltaX;
+    y += deltaY;
+  } <b><FONT COLOR="#000080">finally</FONT></b> {
+    sl.unlockWrite(stamp);
+  }
+}
+  </pre>
+
+  <p>
+    However, the distanceFromOrigin() method could be rewritten
+    to use an optimistic read, for example:
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">double</FONT></b> distanceFromOrigin() {
+  <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.tryOptimisticRead();
+  <b><FONT COLOR="#000080">int</FONT></b> localX = x, localY = y;
+  <b><FONT COLOR="#000080">if</FONT></b> (!sl.validate(stamp)) {
+    stamp = sl.readLock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      localX = x;
+      localY = y;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      sl.unlockRead(stamp);
+    }
+  }
+  <b><FONT COLOR="#000080">return</FONT></b> Math.hypot(localX, localY);
+}
+  </pre>
+
+  <p>
+    In our optimistic distanceFromOrigin(), we first try to get
+    an optimistic read stamp.  This might come back as zero if
+    a writeLock stamp has been issued and has not been unlocked
+    yet.  However, we assume that it is non-zero and continue
+    reading the fields into local variables localX and localY.
+    After we have read x and y, we validate the stamp.  Two
+    things could make this fail: 1. The sl.tryOptimisticRead()
+    method might have come back as zero initially or 2. After
+    we obtained our optimistic lock, another thread requested
+    a writeLock().  We don't know whether this means our copies
+    are invalid, but we need to be safe, rather than sorry.
+    In this version we only try this once and if we do not
+    succeed we immediately move over to the pessimistic read
+    version.  Depending on the system, we could get significant
+    performance gains by spinning for a while, hoping to do a
+    successful optimistic read.  In our experiments, we also
+    found that a shorter code path between tryOptimisticRead()
+    and validate() leads to a higher chance of success in the
+    optimistic read case.
+  </p>
+
+  <p>
+    Here is another idiom that retries a number of times before
+    defaulting to the pessimistic read version.  It uses the
+    trick in Java where we break out to a label, thus jumping out
+    of a code block.  We could have also solved this with a
+    local boolean variable, but to me this is a bit clearer:
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">private</FONT></b> <b><FONT COLOR="#000080">static</FONT></b> <b><FONT COLOR="#000080">final</FONT></b> <b><FONT COLOR="#000080">int</FONT></b> RETRIES = 5;
+
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">double</FONT></b> distanceFromOrigin() {
+  <b><FONT COLOR="#000080">int</FONT></b> localX, localY;
+  out:
+  {
+    <i><FONT COLOR="808080">// try a few times to do an optimistic read</FONT></i>
+    <b><FONT COLOR="#000080">for</FONT></b> (<b><FONT COLOR="#000080">int</FONT></b> i = <FONT COLOR="#0000ff">0</FONT>; i &lt; RETRIES; i++) {
+      <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.tryOptimisticRead();
+      localX = x;
+      localY = y;
+      <b><FONT COLOR="#000080">if</FONT></b> (sl.validate(stamp)) {
+        <b><FONT COLOR="#000080">break</FONT></b> out;
+      }
+    }
+    <i><FONT COLOR="808080">// pessimistic read</FONT></i>
+    <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.readLock();
+    <b><FONT COLOR="#000080">try</FONT></b> {
+      localX = x;
+      localY = y;
+    } <b><FONT COLOR="#000080">finally</FONT></b> {
+      sl.unlockRead(stamp);
+    }
+  }
+  <b><FONT COLOR="#000080">return</FONT></b> Math.hypot(localX, localY);
+}
+  </pre>
+
+  <h4>Conditional Write</h4>
+
+  <p>
+    The last idiom to demonstrate is the conditional write.  We
+    first read the current state.  If it is what we expect, then
+    we try to upgrade the read lock to a write lock.  If we
+    succeed, then we update the state and exit, otherwise we
+    unlock the read lock and then ask for a write lock.  The code
+    is a bit harder to understand, so look it over carefully:
+  </p>
+
+  <pre>
+<b><FONT COLOR="#000080">public</FONT></b> <b><FONT COLOR="#000080">boolean</FONT></b> moveIfAt(<b><FONT COLOR="#000080">int</FONT></b> oldX, <b><FONT COLOR="#000080">int</FONT></b> oldY,
+                        <b><FONT COLOR="#000080">int</FONT></b> newX, <b><FONT COLOR="#000080">int</FONT></b> newY) {
+  <b><FONT COLOR="#000080">long</FONT></b> stamp = sl.readLock();
+  <b><FONT COLOR="#000080">try</FONT></b> {
+    <b><FONT COLOR="#000080">while</FONT></b> (x == oldX &amp;&amp; y == oldY) {
+      <b><FONT COLOR="#000080">long</FONT></b> writeStamp = sl.tryConvertToWriteLock(stamp);
+      <b><FONT COLOR="#000080">if</FONT></b> (writeStamp != <FONT COLOR="#0000ff">0</FONT>) {
+        stamp = writeStamp;
+        x = newX;
+        y = newY;
+        <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">true</FONT></b>;
+      } <b><FONT COLOR="#000080">else</FONT></b> {
+        sl.unlockRead(stamp);
+        stamp = sl.writeLock();
+      }
+    }
+    <b><FONT COLOR="#000080">return</FONT></b> <b><FONT COLOR="#000080">false</FONT></b>;
+  } <b><FONT COLOR="#000080">finally</FONT></b> {
+    sl.unlock(stamp); <i><FONT COLOR="808080">// could be read or write lock</FONT></i>
+  }
+}
+  </pre>
+
+  <p>
+    Whilst this idiom looks clever, I doubt it is really that
+    useful.  Initial tests have shown that it does not perform
+    that well.  In addition, it is difficult to write and
+    understand.
+  </p>
+
+  <p>
+    This is the first in a three-part series on the StampedLock.
+    The next one will examine how we could write the same class
+    using non-blocking code and how the idioms could be made
+    simpler by means of Java 8 Lambdas.  The last newsletter will
+    be dedicated to looking at how it performs against other
+    mechanisms.
+  </p>
+
+  <p>
+    Please remember to <a href="/webinars/stampedlock2013-12-06.jsp">register for our
+    free webinar on StampedLock Idioms on Friday the 6th December
+    at 08:00 UTC</a>.  This will allow you to ask questions
+    and discuss the StampedLock idioms.  A recording will be available 
+    afterwards.
+  </p>
+
+  <p>
+    Kind regards
+  </p>
+
+  <p>
+    Heinz
+  </p>
+
+  <p>
+    P.S. Which do you think is the most popular Java library:
+    junit, slf4j or log4j?  <a href="http://www.takipiblog.com/2013/11/26/githubs-10000-most-popular-java-projects-here-are-the-top-libraries-they-use/" target="_blank">Click
+    here to find out if you are correct!</a>
+  </p>
+<iframe src="https://player.vimeo.com/video/191646503" width="640" height="275"/>
+
+  
+
+<p class="newsinfo">
+  <img src="/skin/images2/arrow_orange2.jpg" height="10" width="30">
+  <a href="http://www.javaspecialists.eu/archive/newsletters.jsp?category=Java 8&amp;locale=en_US">Java 8 Articles</a>
+  <img src="/skin/images2/arrow_orange2.jpg" height="10" width="30">
+  <a href="http://www.javaspecialists.eu/courses/concurrency.jsp">Related Java Course</a>
+</p>
+
+
+
+
+</td>
+</tr>
+</table>
+</th>
+<th width="203" valign="top" class="rightcol_bg" scope="col">
+  
+
+<div id="coursebox"><img src="/skin/images2/rightnav_top.jpg"/></div>
+<table width="150" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr><td class="rightnav" width="95%"><a href="http://www.javaspecialists.eu/courses/xj-conc-j8.jsp">Extreme Java - Concurrency and Performance for Java 8</a></td></tr>
+  <tr><td class="rightnav" width="95%"><a href="http://www.javaspecialists.eu/courses/xj-adv.jsp">Extreme Java - Advanced Topics for Java 8</a></td></tr>
+  <tr><td class="rightnav" width="95%"><a href="http://www.javaspecialists.eu/courses/dpc.jsp">Design Patterns</a></td></tr>
+  <tr><td class="rightnav" width="95%"><a href="http://www.javaspecialists.eu/courses/inhouse.jsp">In-House Courses</a></td></tr>
+</table>
+
+<br/>
+
+<div id="testimonials"><img src="/skin/images2/testimonials_RD.jpg" width="145" height="115" /></div>
+
+
+
+
+
+
+  
+  
+
+
+</td>
+
+
+
+</th>
+</tr>
+</table>
+<table width="909" border="0" align="center" cellpadding="0" cellspacing="0" class="bot_bg">
+<tr>
+<th scope="col"> </th>
+</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr class="footbar">
+<th width="25%" class="footbar" scope="col"> </th>
+<th width="25%" class="footbar" scope="col">&copy; 2010-2016 Heinz Kabutz - All Rights Reserved</th>
+<th width="8%" class="footbar" scope="col"><a href="http://www.javaspecialists.eu/sitemap.jsp">Sitemap</a></th>
+<th width="14%" class="footbar" scope="col"> </th>
+<th width="21%" class="footbar" scope="col"></th>
+<th width="12%" class="footbar" scope="col"> </th>
+</tr>
+</table>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr class="footbar">
+<th width="100%" class="footbar" scope="col">
+  Oracle and Java are registered trademarks of Oracle and/or its
+  affiliates. Other names may be trademarks of their respective
+  owners.  JavaSpecialists.eu is not connected to Oracle, Inc.
+  and is not sponsored by Oracle, Inc.  </th>
+</tr>
+</table>
+
+</th>
+</tr>
+</table>
+</th>
+<th class="right" scope="col"> </th>
+</tr>
+</table>
+
+
+    <!-- rendered in 0 ms -->
+
+</td></tr>
+</table>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9888810-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+</html>
+
+
+

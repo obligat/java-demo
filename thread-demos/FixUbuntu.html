@@ -1,0 +1,731 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Ubuntu 更新错误修复大全-技术 ◆ 学习|Linux.中国-开源社区</title>
+ 
+<meta name="keywords" content="Ubuntu 更新错误修复大全" />
+<meta name="description" content="在Ubuntu更新中，谁没有碰见个错误？在Ubuntu和其它基于Ubuntu的Linux发行版中，更新错误是一个共性的错误，也经常发生。这些错误出现的原因多种多样，修复起来也很简单。在本文中，我们将见到Ubuntu中各种类型频繁发生的更新错误以及它们的修复方法。 合并列表问题 当你在终端中运行更新命令时，你可能会碰到这个错误合并列表错误，就像下面这样：  E:Encountered a section with no Package: header, E:Problem with MergeList /var/lib/apt/lists/archive.ubuntu.comubuntudistspreciseuniversebinary-i386Packages, E:The package lis " />
+<meta name="copyright" content="2005-2015 Linux.cn" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="applicable-device" content="pc,mobile">
+<meta name="referrer" content="always">
+<base href="https://linux.cn/" /><link rel="stylesheet" type="text/css" href="https://dn-linuxcn.qbox.me/data/cache/style_1_common.css?a0R" />
+<link rel="stylesheet" type="text/css" href="https://dn-linuxcn.qbox.me/data/cache/style_1_portal_view.css?a0R" />
+<link href="https://dn-linuxcn.qbox.me/static/css/responsive.css?a0R" rel="stylesheet">
+<script type="text/javascript">
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?f219a1d7ae00e99bdc4410080f3a6ef7";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<script type="text/javascript">var STYLEID = '1', STATICURL = 'https://dn-linuxcn.qbox.me/static/', IMGDIR = 'https://dn-linuxcn.qbox.me/static/image/common', VERHASH = 'a0R', charset = 'utf-8', discuz_uid = '0', cookiepre = 'dx_516d_', cookiedomain = '.linux.cn', cookiepath = '/', showusercard = '1', attackevasive = '0', disallowfloat = '', creditnotice = '1|经验|,2|L币|,3|贡献|', defaultstyle = '', REPORTURL = 'aHR0cDovL2xpbnV4LmNuL2FydGljbGUtNTYwMy0xLmh0bWw=', SITEURL = 'https://linux.cn/', JSPATH = 'https://dn-linuxcn.qbox.me/static/js/', CSSPATH = 'data/cache/style_', DYNAMICURL = '';</script>
+<script src="https://dn-linuxcn.qbox.me/static/js/common.js?a0R" type="text/javascript"></script>
+<script src="https://dn-linuxcn.qbox.me/static/js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">jQuery.noConflict();</script>
+<script src="https://dn-linuxcn.qbox.me/static/js/jquery.plugins.js?a0R" type="text/javascript"></script>
+<script src="https://dn-linuxcn.qbox.me/static/js/bootstrap.min.js?a0R" type="text/javascript"></script>
+<link rel="alternate" type="application/rss+xml" title="Linux.中国 - 开源社区 RSS" href="/rss.xml" />
+<link rel="shortcut icon" href="https://dn-linuxcn.qbox.me/favicon.ico"  sizes="32x32" />
+<link rel="canonical" href="https://linux.cn/article-5603-1.html" /><script src="https://dn-linuxcn.qbox.me/static/js/portal.js?a0R" type="text/javascript"></script>
+</head>
+
+<body id="nv_portal" class="pg_view" onkeydown="if(event.keyCode==27) return false;">
+<div id="append_parent"></div><div id="ajaxwaitid"></div>
+<div id="toptb" class="cl">
+<div class="wp">
+<div class="z"><a href="/rss.xml" target="_blank" >RSS</a><a href="https://linux.cn/rss-digest.xml" >DIGEST</a><a href="/tag/" >TAG</a></div>
+<div class="y">
+<a href="/aboutus.html" >关于我们/aboutus</a><a href="/business.html" >广告合作/AD</a></div>
+</div>
+</div>
+
+
+<div id="hd">
+<div class="wp">
+<div class="hdc cl"><h2 style="padding:5px 20px 5px 0;"><a href="https://linux.cn/" title="Linux.中国 - 开源社区"><img src="https://dn-linuxcn.qbox.me/static/image/common/linuxcn_logo_230x80_ani2.gif" alt="Linux.中国 - 开源社区" border="0" /></a></h2><div class="y"><script src="https://dn-linuxcn.qbox.me/static/js/logging.js?a0R" type="text/javascript"></script>
+<form method="post" autocomplete="off" id="lsform" action="member.php?mod=logging&amp;action=login&amp;loginsubmit=yes&amp;infloat=yes&amp;lssubmit=yes" onsubmit="pwmd5('ls_password');return lsSubmit();">
+<div class="fastlg cl">
+<span id="return_ls" style="display:none"></span>
+<div class="y pns">
+<table cellspacing="0" cellpadding="0">
+<tr>
+<td><label for="ls_username">帐号</label></td>
+<td><input type="text" name="username" id="ls_username" class="px vm xg1"  value="用户名/Email" onfocus="if(this.value == '用户名/Email'){this.value = '';this.className = 'px vm';}" onblur="if(this.value == ''){this.value = '用户名/Email';this.className = 'px vm xg1';}" tabindex="901" /></td>
+<td class="fastlg_l"><label for="ls_cookietime"><input type="checkbox" name="cookietime" id="ls_cookietime" class="pc" value="2592000" tabindex="903" />自动登录</label></td>
+<td>&nbsp;<a href="javascript:;" onclick="showWindow('login', 'member.php?mod=logging&action=login&viewlostpw=1')">找回密码</a></td>
+</tr>
+<tr>
+<td><label for="ls_password">密码</label></td>
+<td><input type="password" name="password" id="ls_password" class="px vm" autocomplete="off" tabindex="902" /></td>
+<td class="fastlg_l"><button type="submit" class="pn vm" tabindex="904"><em>登录</em></button></td>
+<td>&nbsp;<a href="member.php?mod=knight" class="xi2 xw1">骑士注册</a></td>
+</tr>
+</table>
+<input type="hidden" name="quickforward" value="yes" />
+<input type="hidden" name="handlekey" value="ls" />
+</div>
+
+<div class="fastlg_fm y" style="margin-right: 10px; padding-right: 10px">
+<p><a href="https://linux.cn/connect.php?mod=login&op=init&referer=portal.php%3Fmod%3Dview%26aid%3D5603%26page%3D1%26ref%3D&statfrom=login_simple"><img src="https://dn-linuxcn.qbox.me/static/image/common/qq_login.gif" class="vm" alt="QQ登录" /></a></p>
+<p><a href="xwb.php?m=xwbAuth.login"><img src="https://dn-linuxcn.qbox.me/static/image/common/sina_login.gif" class="vm" style="padding: 2px 0;" alt="微博登录" /></a></p>
+</div>
+
+<script>
+try{
+(function(){
+var node = document.getElementById("lsform").firstChild;
+var i = 1;
+while(i < 3 && node.nodeType!=1){
+node=node.nextSibling;
+i++;
+}
+node.style.width = 'auto';
+})();
+}catch(e){}
+</script>
+</div>
+</form>
+
+<script src="https://dn-linuxcn.qbox.me/static/js/md5.js?a0R" type="text/javascript" reload="1"></script>
+</div>
+<h2 style="padding:5px 20px;float:right;">
+<div class="linuxcnad">
+    </div>
+</h2>
+</div>
+<div class="p_pop h_pop" id="mn_userapp_menu" style="display: none"></div><div id="topmenu_wrapper">
+<div id="topmenu">
+<div id="nv">
+<ul><li id="mn_N6666" ><a href="/" hidefocus="true"   style="font-weight: bold;">首页</a></li><li id="mn_P3" onmouseover="navShow('P3')"><a href="https://linux.cn/tech/" hidefocus="true"   style="color: #FFFAE5;">技术 ◆ 学习</a></li><li id="mn_P1" ><a href="https://linux.cn/news/" hidefocus="true"   style="color: #FFFAE5;">新闻 ◆ 快讯</a></li><li id="mn_P4" ><a href="https://linux.cn/talk/" hidefocus="true"   style="color: #FFFAE5;">观点 ◆ 热议</a></li><li id="mn_P8" onmouseover="navShow('P8')"><a href="https://linux.cn/share/" hidefocus="true"   style="color: #FFFAE5;">软件 ◆ 分享</a></li><li id="mn_N9be8" onmouseover="navShow('N9be8')"><a href="/forum/" hidefocus="true" target="_blank"   style="color: cyan;">论坛</a></li></ul>
+</div>
+<div id="mu" class="cl">
+<ul class="cl " id="snav_mn_P3" style="display:none;">
+<li><a href="https://linux.cn/tech/desktop/" hidefocus="true" >桌面应用</a></li><li><a href="https://linux.cn/tech/sa/" hidefocus="true" >系统运维</a></li><li><a href="https://linux.cn/tech/program/" hidefocus="true" >软件开发</a></li></ul>
+<ul class="cl " id="snav_mn_P8" style="display:none;">
+<li><a href="https://linux.cn/share/distro/" hidefocus="true" >Linux 发行版</a></li></ul>
+<ul class="cl " id="snav_mn_N9be8" style="display:none;">
+<li><a href="/thread/" hidefocus="true"  style="color: blue;">全部话题</a></li><li><a href="javascript:showWindow('nav', 'forum.php?mod=misc&action=nav&special=0');" hidefocus="true"  style="color: red;">发新帖</a></li><li><a href="javascript:void();" hidefocus="true" >|</a></li><li><a href="/forum/news/" hidefocus="true" >新闻杂谈</a></li><li><a href="/forum/sa/" hidefocus="true" >系统运维</a></li><li><a href="/forum/program/" hidefocus="true" >编程开发</a></li></ul>
+<ul class="cl " id="snav_mn_N39f5" style="display:none;">
+<li><a href="/space.php" hidefocus="true" >首页</a></li><li><a href="/home.php?mod=space&do=home" hidefocus="true" >动态</a></li><li><a href="/home.php?mod=space&do=doing" hidefocus="true" >记录</a></li><li><a href="/home.php?mod=space&do=blog" hidefocus="true" >博客</a></li><li><a href="/home.php?mod=space&do=album" hidefocus="true" >相册</a></li><li><a href="/home.php?mod=space&do=favorite" hidefocus="true" >收藏</a></li><li><a href="/home.php?mod=space&do=friend" hidefocus="true" >好友</a></li><li><a href="/home.php?mod=spacecp&ac=invite" hidefocus="true" >邀请</a></li></ul>
+<ul class="cl " id="snav_mn_userapp" style="display:none;">
+</ul>
+</div></div>
+</div>
+<div id="scbar" class="cl">
+<form id="scbar_form" method="post" autocomplete="off" onsubmit="searchFocus($('scbar_txt'))" action="search.php?searchsubmit=yes" target="_blank">
+<input type="hidden" name="mod" id="scbar_mod" value="search" />
+<input type="hidden" name="formhash" value="817d4c3b" />
+<input type="hidden" name="srchtype" value="title" />
+<input type="hidden" name="srhfid" value="0" />
+<input type="hidden" name="srhlocality" value="portal::view" />
+<table id="scbar_table" cellspacing="0" cellpadding="0" style="float:right;">
+<tr>
+<td class="scbar_icon_td"></td>
+<td class="scbar_txt_td"><input type="text" name="srchtxt" id="scbar_txt" value="请注册后再搜索" autocomplete="off" speech /></td>
+<td class="scbar_type_td"><a href="javascript:;" id="scbar_type" class="xg1" onclick="showMenu(this.id)" hidefocus="true">搜索</a></td>
+<td class="scbar_btn_td"><button type="submit" name="searchsubmit" id="scbar_btn" sc="1" class="pn pnc" value="true"><strong class="xi2">搜索</strong></button></td>
+<td class="scbar_hot_td">
+<div id="scbar_hot">
+</div>
+</td>
+</tr>
+</table>
+</form>
+<span class="z titletext" style="padding: 0 10px 0 20px;">❏ <a href="http://locez.com" target="_blank">Locez</a> 新手指南：</span>
+<ul class="cl mutag z">
+<li><a class="hidefocus" hidefocus="true" href="https://linux.cn/article-4130-1.html">下载 Linux »</a></li>
+<li><a class="hidefocus" hidefocus="true" href="https://linux.cn/article-5893-1.html">安装 Linux »</a></li>
+<li><a class="hidefocus" hidefocus="true" href="https://linux.cn/article-6042-1.html">安装软件 »</a></li>
+<li><a class="hidefocus" hidefocus="true" href="https://linux.cn/article-6160-1.html">基础命令 »</a></li>
+
+</ul>
+</div>
+<br class="clear" />
+<ul id="scbar_type_menu" class="p_pop" style="display: none;"><li><a href="javascript:;" rel="search">全站</a></li></ul>
+<script type="text/javascript">
+initSearchmenu('scbar', '');
+</script>
+<script type="text/javascript">
+(function($){
+$(window).load(function() {
+$("#topmenu").affix({offset : {
+top : $("#topmenu").offset().top,
+bottom: 218}});
+$("#topmenu").width($('.hdc').width());
+$('#topmenu_wrapper').height($("#topmenu").height());
+
+$("#search_more").affix({offset : {
+top: 1000}});
+})
+})(jQuery);
+</script>
+
+</div>
+</div>
+<div id="wp" class="wp">
+<script src="https://dn-linuxcn.qbox.me/static/js/forum_viewthread.js?a0R" type="text/javascript"></script>
+<script type="text/javascript">zoomstatus = parseInt(1), imagemaxwidth = '700', aimgcount = new Array();</script>
+
+<div class="linuxcnad">
+    <div><a href="https://linux.cn/go/nw9k" target="_blank"><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201611/12/080837z09xypismeieg9zt.jpg" height="120" width="100%" border="0"></a></div></div>
+<div id="pt" class="bm cl">
+<div class="z">
+<a href="./" class="nvhm" title="首页">Linux.中国 - 开源社区</a> <em>&rsaquo;</em><a href="https://linux.cn/tech/">技术 ◆ 学习</a> <em>&rsaquo;</em>
+查看内容
+</div>
+</div>
+
+<div class="linuxcnad"></div>
+<style id="diy_style" type="text/css"></style>
+<div class="wp">
+<!--[diy=diy1]--><div id="diy1" class="area"></div><!--[/diy]-->
+</div>
+<div id="ct" class="ct2 wp cl">
+<div class="mn">
+<div class="linuxcnad">
+    </div>
+<div class="vw">
+<div class="h hm">
+<h1 class="ph" id="article_title">Ubuntu 更新错误修复大全 </h1>
+</div>
+<div class="h">
+<p class="copyright">
+    	 
+    		    			    			<span class="z textcut">编译自：<a href="http://itsfoss.com/fix-update-errors-ubuntu-1404/" target="_blank">http://itsfoss.com/fix-update-errors-ubuntu-1404/</a></span>
+    			    		    		<span class="y">作者： Abhishek</span>    		<br class="clear" />
+    	    	<span class="z">原创：<a href="http://lctt.github.io/" target=_blank>LCTT</a> <a href="https://linux.cn/article-5603-1.html" target="_blank">https://linux.cn/article-5603-1.html</a></span>
+            			<span class="y">译者： GOLinux</span>    		<br class="clear" />
+    	    	<span class="z">本文地址：<a href="https://linux.cn/article-5603-1.html">https://linux.cn/article-5603-1.html</a></span>
+    	<span class="y"><a href="https://linux.cn/article-5603-1.html?pr" class="print" title="打印"></a></span>
+    	<br class="clear" />
+    	</p>
+<p class="xg1">
+2015-6-11 08:00&nbsp;&nbsp;&nbsp;
+评论: <a href="portal.php?mod=comment&id=5603&idtype=aid" title="查看全部评论"><em id="_commentnum">3</em></a>&nbsp;收藏: <em id="_favtimes">7</em>&nbsp;&nbsp;&nbsp;&nbsp;
+</p>
+</div>
+
+<!--[diy=diysummarytop]--><div id="diysummarytop" class="area"></div><!--[/diy]-->
+
+
+<!--[diy=diysummarybottom]--><div id="diysummarybottom" class="area"></div><!--[/diy]-->
+
+<div class="d">
+
+<!--[diy=diycontenttop]--><div id="diycontenttop" class="area"></div><!--[/diy]-->
+
+<div id="article_content">
+<div class="linuxcnad"></div>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000209ot1y6b7yyrty1wew.jpg" alt="" /></p>
+<p>在Ubuntu更新中，谁没有碰见个错误？在Ubuntu和其它基于Ubuntu的Linux发行版中，更新错误是一个共性的错误，也经常发生。这些错误出现的原因多种多样，修复起来也很简单。在本文中，我们将见到Ubuntu中各种类型频繁发生的更新错误以及它们的修复方法。</p>
+<h3 id="toc_1">合并列表问题</h3>
+<p>当你在终端中运行更新命令时，你可能会碰到这个错误&ldquo;<a href="http://itsfoss.com/how-to-fix-problem-with-mergelist/">合并列表错误</a>&rdquo;，就像下面这样：</p>
+<blockquote>
+<p>E:Encountered a section with no Package: header,</p>
+<p>E:Problem with MergeList /var/lib/apt/lists/archive.ubuntu.com<em>ubuntu</em>dists<em>precise</em>universe<em>binary-i386</em>Packages,</p>
+<p>E:The package lists or status file could not be parsed or opened.&rsquo;</p>
+</blockquote>
+<p>可以使用以下命令来修复该错误：</p>
+<pre class="prettyprint linenums"><code>sudo rm -r /var/lib/apt/lists/*
+sudo apt-get clean &amp;&amp; sudo apt-get update
+</code></pre>
+<h3 id="toc_2">下载仓库信息失败 -1</h3>
+<p>实际上，有两种类型的<a href="http://itsfoss.com/solve-ubuntu-error-failed-to-download-repository-information-check-your-internet-connection/">下载仓库信息失败错误</a>。如果你的错误是这样的：</p>
+<blockquote>
+<p>W:Failed to fetch bzip2:/var/lib/apt/lists/partial/in.archive.ubuntu.com<em>ubuntu</em>dists<em>oneiric</em>restricted<em>binary-i386</em>Packages Hash Sum mismatch,</p>
+<p>W:Failed to fetch bzip2:/var/lib/apt/lists/partial/in.archive.ubuntu.com<em>ubuntu</em>dists<em>oneiric</em>multiverse<em>binary-i386</em>Packages Hash Sum mismatch,</p>
+<p>E:Some index files failed to download. They have been ignored, or old ones used instead</p>
+</blockquote>
+<p>那么，你可以用以下命令修复：</p>
+<pre class="prettyprint linenums"><code>sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get update
+</code></pre>
+<h3 id="toc_3">下载仓库信息失败 -2</h3>
+<p>下载仓库信息失败的另外一种类型是由于PPA过时导致的。通常，当你运行更新管理器，并看到这样的错误时：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000209ttirth77rr9iitfk.png" alt="" /></p>
+<p>你可以运行sudo apt-get update来查看哪个PPA更新失败，你可以把它从源列表中删除。你可以按照这个截图指南来<a href="http://itsfoss.com/failed-to-download-repository-information-ubuntu-13-04/">修复下载仓库信息失败错误</a>。</p>
+<h3 id="toc_4">下载包文件失败错误</h3>
+<p>一个类似的错误是<a href="http://itsfoss.com/fix-failed-download-package-files-error-ubuntu/">下载包文件失败错误</a>，像这样：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000210yjd7ex7vvff6epse.jpg" alt="" /></p>
+<p>该错误很容易修复，只需修改软件源为主服务器即可。转到&ldquo;软件和更新&rdquo;，在那里你可以修改下载服务器为主服务器：</p>
+<p><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000210h0fu9fc5mu7h05p7.jpg" alt="" /></p>
+<h3 id="toc_5">部分更新错误</h3>
+<p>在终端中运行更新会出现<a href="http://itsfoss.com/fix-partial-upgrade-error-elementary-os-luna-quick-tip/">部分更新错误</a>：</p>
+<blockquote>
+<p>Not all updates can be installed</p>
+<p>Run a partial upgrade, to install as many updates as possible</p>
+</blockquote>
+<p>在终端中运行以下命令来修复该错误：</p>
+<pre class="prettyprint linenums"><code>sudo apt-get install -f
+</code></pre>
+<h3 id="toc_6">加载共享库时发生错误</h3>
+<p>该错误更多是安装错误，而不是更新错误。如果尝试从源码安装程序，你可能会碰到这个错误：</p>
+<blockquote>
+<p>error while loading shared libraries:</p>
+<p>cannot open shared object file: No such file or directory</p>
+</blockquote>
+<p>该错误可以通过在终端中运行以下命令来修复：</p>
+<pre class="prettyprint linenums"><code>sudo /sbin/ldconfig -v
+</code></pre>
+<p>你可以在这里查找到更多详细内容<a href="http://itsfoss.com/solve-open-shared-object-file-quick-tip/">加载共享库时发生错误</a>。</p>
+<h3 id="toc_7">无法获取锁 /var/cache/apt/archives/lock</h3>
+<p>在另一个程序在使用APT时，会发生该错误。假定你正在Ubuntu软件中心安装某个东西，然后你又试着在终端中运行apt。</p>
+<blockquote>
+<p>E: Could not get lock /var/cache/apt/archives/lock &ndash; open (11: Resource temporarily unavailable)</p>
+<p>E: Unable to lock directory /var/cache/apt/archives/</p>
+</blockquote>
+<p>通常，只要你把所有其它使用apt的程序关了，这个问题就会好的。但是，如果问题持续，可以使用以下命令：</p>
+<pre class="prettyprint linenums"><code>sudo rm /var/lib/apt/lists/lock
+</code></pre>
+<p>如果上面的命令不起作用，可以试试这个命令：</p>
+<pre class="prettyprint linenums"><code>sudo killall apt-get
+</code></pre>
+<p>关于该错误的更多信息，可以在<a href="http://itsfoss.com/fix-ubuntu-install-error/">这里</a>找到。</p>
+<h3 id="toc_8">GPG错误： 下列签名无法验证</h3>
+<p>在添加一个PPA时，可能会导致以下错误<a href="http://itsfoss.com/solve-gpg-error-signatures-verified-ubuntu/">GPG错误： 下列签名无法验证</a>，这通常发生在终端中运行更新时：</p>
+<blockquote>
+<p>W: GPG error: <a href="http://repo.mate-desktop.org">http://repo.mate-desktop.org</a> saucy InRelease: The following signatures couldn&rsquo;t be verified because the public key is not available: NO_PUBKEY 68980A0EA10B4DE8</p>
+</blockquote>
+<p>我们所要做的，就是获取系统中的这个公钥，从信息中获取密钥号。在上述信息中，密钥号为68980A0EA10B4DE8。该密钥可通过以下方式使用：</p>
+<pre class="prettyprint linenums"><code>sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 68980A0EA10B4DE8
+</code></pre>
+<p>在添加密钥后，再次运行更新就没有问题了。</p>
+<h3 id="toc_9">BADSIG错误</h3>
+<p>另外一个与签名相关的Ubuntu更新错误是<a href="http://itsfoss.com/solve-badsig-error-quick-tip/">BADSIG错误</a>，它看起来像这样：</p>
+<blockquote>
+<p>W: A error occurred during the signature verification. The repository is not updated and the previous index files will be used. GPG error: <a href="http://extras.ubuntu.com">http://extras.ubuntu.com</a> precise Release: The following signatures were invalid: BADSIG 16126D3A3E5C1192 Ubuntu Extras Archive Automatic Signing Key</p>
+<p>W: GPG error: <a href="http://ppa.launchpad.net">http://ppa.launchpad.net</a> precise Release:</p>
+<p>The following signatures were invalid: BADSIG 4C1CBC1B69B0E2F4 Launchpad PPA for Jonathan French W: Failed to fetch <a href="http://extras.ubuntu.com/ubuntu/dists/precise/Release">http://extras.ubuntu.com/ubuntu/dists/precise/Release</a></p>
+</blockquote>
+<p>要修复该BADSIG错误，请在终端中使用以下命令：</p>
+<pre class="prettyprint linenums"><code>sudo apt-get clean
+cd /var/lib/apt
+sudo mv lists oldlist
+sudo mkdir -p lists/partial
+sudo apt-get clean
+sudo apt-get update
+</code></pre>
+<p>本文汇集了你可能会碰到的<strong>Ubuntu更新错误</strong>，我希望这会对你处理这些错误有所帮助。你在Ubuntu中是否也碰到过其它更新错误呢？请在下面的评论中告诉我，我会试着写个快速指南。</p>
+<hr />
+<p>via: <a href="http://itsfoss.com/fix-update-errors-ubuntu-1404/">http://itsfoss.com/fix-update-errors-ubuntu-1404/</a></p>
+<p>作者：<a href="http://itsfoss.com/author/abhishek/">Abhishek</a> 译者：<a href="https://github.com/GOLinux">GOLinux</a> 校对：<a href="https://github.com/wxy">wxy</a></p>
+<p>本文由 <a href="https://github.com/LCTT/TranslateProject">LCTT</a> 原创翻译，<a href="https://linux.cn/">Linux中国</a> 荣誉推出</p>
+</div>
+</div>
+<div class="b">
+<div class="hm">
+<a title="分享到新浪微博" href="javascript:void( share_tsina(SITEURL + 'article-5603-shareweibo.html','article_title','article_content','https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000209ot1y6b7yyrty1wew.jpg') );" class="tsina_large"></a>
+<a href="javascript:void();" onmouseover="show_qrcode(event,'#qrcode', SITEURL + 'article-5603-1-wx.html');" onmouseout="show_qrcode(event,'#qrcode','');" class="weixin_large"></a>
+<a title="收藏" href="home.php?mod=spacecp&amp;ac=favorite&amp;type=article&amp;id=5603&amp;handlekey=favoritearticlehk_5603" id="a_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" class="fav_large" title="收藏"></a>
+</div>
+<p class="copyright">
+    	 
+    		    			    			<span class="z textcut">编译自：<a href="http://itsfoss.com/fix-update-errors-ubuntu-1404/" target="_blank">http://itsfoss.com/fix-update-errors-ubuntu-1404/</a></span>
+    			    		    		<span class="y">作者： Abhishek</span>    		<br class="clear" />
+    	    	<span class="z">原创：<a href="http://lctt.github.io/" target=_blank>LCTT</a> <a href="https://linux.cn/article-5603-1.html" target="_blank">https://linux.cn/article-5603-1.html</a></span>
+            			<span class="y">译者： GOLinux</span>    		<br class="clear" />
+    	    	<br />
+    	    		<span>本文由 LCTT 原创翻译，<a href="https://linux.cn/article-5603-1.html">Linux中国首发</a>。也想加入译者行列，为开源做一些自己的贡献么？欢迎加入 <a href="http://lctt.github.io/" target=_blank>LCTT</a>！<br />翻译工作和译文发表仅用于学习和交流目的，翻译工作遵照 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh" target=_blank>CC-BY-NC-SA 协议规定</a>，如果我们的工作有侵犯到您的权益，请及时联系我们。</span>
+    		    		<br class="clear" />
+    		<span style="color:red;">欢迎遵照 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh" target=_blank>CC-BY-NC-SA 协议规定</a>转载，敬请在正文中标注并保留原文/译文链接和作者/译者等信息。</span>
+                		<br class="clear" />
+    	    	<span>文章仅代表作者的知识和看法，如有不同观点，请楼下排队<a href="javascript:void(0);" onclick="$('message').focus();">吐槽</a> :D</span>
+    	<br class="clear" />
+</p>
+
+
+<div class="linuxcnad"></div>
+<!--[diy=diycontentbottom]--><div id="diycontentbottom" class="area"></div><!--[/diy]-->
+
+<script src="https://dn-linuxcn.qbox.me/static/js/home.js?a0R" type="text/javascript"></script>
+<div id="click_div"><table cellpadding="0" cellspacing="0" class="atd">
+<tr></tr>
+</table>
+<script type="text/javascript">
+function errorhandle_clickhandle(message, values) {
+if(values['id']) {
+showCreditPrompt();
+show_click(values['idtype'], values['id'], values['clickid']);
+}
+}
+</script>
+
+</div>
+
+<!--[diy=diycontentclickbottom]--><div id="diycontentclickbottom" class="area"></div><!--[/diy]-->
+
+<script type="text/javascript">
+var menudata = [{"title":"\u5408\u5e76\u5217\u8868\u95ee\u9898","level":3,"position":447,"child":[],"page":1},{"title":"\u4e0b\u8f7d\u4ed3\u5e93\u4fe1\u606f\u5931\u8d25 -1","level":3,"position":1196,"child":[],"page":1},{"title":"\u4e0b\u8f7d\u4ed3\u5e93\u4fe1\u606f\u5931\u8d25 -2","level":3,"position":2110,"child":[],"page":1},{"title":"\u4e0b\u8f7d\u5305\u6587\u4ef6\u5931\u8d25\u9519\u8bef","level":3,"position":2694,"child":[],"page":1},{"title":"\u90e8\u5206\u66f4\u65b0\u9519\u8bef","level":3,"position":3281,"child":[],"page":1},{"title":"\u52a0\u8f7d\u5171\u4eab\u5e93\u65f6\u53d1\u751f\u9519\u8bef","level":3,"position":3753,"child":[],"page":1},{"title":"\u65e0\u6cd5\u83b7\u53d6\u9501 \/var\/cache\/apt\/archives\/lock","level":3,"position":4393,"child":[],"page":1},{"title":"GPG\u9519\u8bef\uff1a \u4e0b\u5217\u7b7e\u540d\u65e0\u6cd5\u9a8c\u8bc1","level":3,"position":5337,"child":[],"page":1},{"title":"BADSIG\u9519\u8bef","level":3,"position":6272,"child":[],"page":1}];
+menuAnchor(menudata);
+</script>
+<div class="o cl ptm pbm">
+<a href="home.php?mod=spacecp&amp;ac=share&amp;type=article&amp;id=5603&amp;handlekey=sharearticlehk_5603" id="a_share" onclick="showWindow(this.id, this.href, 'get', 0);" title="站内分享" class="siteshare z"></a>
+<a href="home.php?mod=spacecp&amp;ac=favorite&amp;type=article&amp;id=5603&amp;handlekey=favoritearticlehk_5603" id="a_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" class="favorite z" title="收藏"></a>
+<a href="misc.php?mod=invite&amp;action=article&amp;id=5603" id="a_invite" onclick="showWindow('invite', this.href, 'get', 0);" class="invite z" title="邀请"></a>
+<a href="https://linux.cn/article-5603-1.html?pr" class="print z" title="打印"></a>
+				
+</div>
+<div class="pren pbm cl">
+<em>上一篇：<a href="https://linux.cn/article-5597-1.html">创建尽可能小的 Docker 容器</a></em><em>下一篇：<a href="https://linux.cn/article-5607-1.html">Shell 脚本面试问题大全</a></em></div>
+</div>
+</div>
+
+<!--[diy=diycontentrelatetop]--><div id="diycontentrelatetop" class="area"></div><!--[/diy]-->
+
+<!--[diy=diycontentrelate]--><div id="diycontentrelate" class="area"></div><!--[/diy]-->
+
+<div style="margin-right:15px;">
+<div id="add_comment" class="bm">
+<div class="bm_h cl">
+<h3>发表评论</h3>
+</div>
+<div class="bm_c pbn">
+<form id="cform" name="cform" action="portal.php?mod=portalcp&ac=comment" method="post" autocomplete="off">
+<div class="tedt">
+<div class="area">
+<textarea name="message" rows="10" class="pt" id="message" onkeydown="ctrlEnter(event, 'commentsubmit_btn');"></textarea>
+</div>
+</div>
+
+<div class="mtm z"><span id="seccode_cSShKYj4"></span>		
+<script type="text/javascript" reload="1">updateseccode('cSShKYj4', '<sec> <span id="sec<hash>" onclick="showMenu(this.id);"><sec></span><div id="sec<hash>_menu" class="p_pop p_opt" style="display:none"><sec></div>', 'portal::view');</script>
+<script type="text/javascript">
+(function($){
+$("#cform").submit(function(e) {
+if ($("#checksec_none_cSShKYj4").length>0) {
+alert("请输入验证码");
+return false;
+} else if ($("#checksec_error_cSShKYj4").length>0) {
+alert("验证码输入错误，请重新输入");
+return false;
+} else if ($("#checksec_loading_cSShKYj4").length>0) {
+alert("验证码验证中……");
+return false;
+}
+});
+})(jQuery);
+</script>
+</div>
+<input type="hidden" name="portal_referer" value="https://linux.cn/article-5603-1.html#comment">
+<input type="hidden" name="referer" value="https://linux.cn/article-5603-1.html#comment" />
+<input type="hidden" name="id" value="0" />
+<input type="hidden" name="idtype" value="" />
+<input type="hidden" name="aid" value="5603">
+<input id="reppid" type="hidden" name="reppid" value="">
+<input type="hidden" name="formhash" value="817d4c3b">
+<input type="hidden" name="replysubmit" value="true">
+<input type="hidden" name="commentsubmit" value="true" />
+<p class="mtm z"><button type="submit" name="commentsubmit_btn" id="commentsubmit_btn" value="true" class="pn"><strong>评论</strong></button></p>
+<br class="clear" />
+</form>
+</div>
+</div>
+</div>
+<div id="comment" class="bm" style="margin-right:15px;">
+<div class="bm_h cl">
+<h3 class="z"><a name="comment"></a>最新评论</h3>
+<h3 class="y"><a href="javascript:void(0);" class="y" style="color:#C00;" onclick="$('message').focus();">我也要发表评论</a></h3>
+</div>
+<div id="comment_ul" class="bm_c"><a name="comment_anchor_33503"></a>
+<dl id="comment_33503_li" class="ptm pbm bbda cl">
+<dt class="mbm">
+<a href="space/25433/" class="xi2 xw1 vm" c="1" target="_blank">Janejue</a>
+<span class="xg1 xw0 vm">2015-6-13 19:46</span>
+</dt>
+<dd>
+mark</dd>
+<dd>
+<span class="y xw0 xi2 opt">
+<a class="replyadd" href="portal.php?mod=review&amp;action=postreview&amp;do=support&amp;idtype=aid&amp;tid=5603&amp;pid=33503&amp;hash=817d4c3b" onclick="ajaxmenu(this, 3000, 0, 0, '43', '');return false;" onmouseover="this.title = ($('review_support_33503').innerHTML ? $('review_support_33503').innerHTML : 0) + ' 人 赞'">赞 <span id="review_support_33503"></span></a> 
+<!--<a href="javascript:;" onclick="portal_comment_reppost(33503, '5603');">回复</a> --><a id="reply_33503" onclick="showWindow('comment', this.href, 'get', 0);" href="portal.php?mod=portalcp&amp;ac=comment&amp;op=reply&amp;cid=33503&amp;aid=5603&amp;idtype=">回复</a> </span>
+</dd>
+</dl><a name="comment_anchor_33483"></a>
+<dl id="comment_33483_li" class="ptm pbm bbda cl">
+<dt class="mbm">
+<a href="space/20770/" class="xi2 xw1 vm" c="1" target="_blank">贵在坚持</a>
+<span class="xg1 xw0 vm">2015-6-11 20:30</span>
+</dt>
+<dd>
+虽然没有遇到过，但是还是要Mark的。</dd>
+<dd>
+<span class="y xw0 xi2 opt">
+<a class="replyadd" href="portal.php?mod=review&amp;action=postreview&amp;do=support&amp;idtype=aid&amp;tid=5603&amp;pid=33483&amp;hash=817d4c3b" onclick="ajaxmenu(this, 3000, 0, 0, '43', '');return false;" onmouseover="this.title = ($('review_support_33483').innerHTML ? $('review_support_33483').innerHTML : 0) + ' 人 赞'">赞 <span id="review_support_33483"></span></a> 
+<!--<a href="javascript:;" onclick="portal_comment_reppost(33483, '5603');">回复</a> --><a id="reply_33483" onclick="showWindow('comment', this.href, 'get', 0);" href="portal.php?mod=portalcp&amp;ac=comment&amp;op=reply&amp;cid=33483&amp;aid=5603&amp;idtype=">回复</a> </span>
+</dd>
+</dl><a name="comment_anchor_33472"></a>
+<dl id="comment_33472_li" class="ptm pbm bbda cl">
+<dt class="mbm">
+<a href="space/20473/" class="xi2 xw1 vm" c="1" target="_blank">FoamValue</a>
+<span class="xg1 xw0 vm">2015-6-11 08:41</span>
+</dt>
+<dd>
+mark</dd>
+<dd>
+<span class="y xw0 xi2 opt">
+<a class="replyadd" href="portal.php?mod=review&amp;action=postreview&amp;do=support&amp;idtype=aid&amp;tid=5603&amp;pid=33472&amp;hash=817d4c3b" onclick="ajaxmenu(this, 3000, 0, 0, '43', '');return false;" onmouseover="this.title = ($('review_support_33472').innerHTML ? $('review_support_33472').innerHTML : 0) + ' 人 赞'">赞 <span id="review_support_33472">6</span></a> 
+<!--<a href="javascript:;" onclick="portal_comment_reppost(33472, '5603');">回复</a> --><a id="reply_33472" onclick="showWindow('comment', this.href, 'get', 0);" href="portal.php?mod=portalcp&amp;ac=comment&amp;op=reply&amp;cid=33472&amp;aid=5603&amp;idtype=">回复</a> </span>
+</dd>
+</dl><div class="ptm pbm cl">
+</div>
+</div>
+</div>
+
+<!--[diy=diycontentcomment]--><div id="diycontentcomment" class="area"></div><!--[/diy]-->
+</div>
+<div class="sd pph">
+
+
+<div class="drag">
+<!--[diy=diyrighttop]--><div id="diyrighttop" class="area"></div><!--[/diy]-->
+</div>
+
+<div class="linuxcnad">
+    <div><a href="https://linux.cn/go/n8v8" target="_blank"><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201610/27/164945jgwmm11es1ggepn4.jpg" width="100%" alt="运维世界大会" border="0"></a></div></div>
+<div class="linuxcnad">
+    </div>
+<div class="linuxcnad"><div class="hm"><a href="https://linux.cn/go/nw4d" target="_blank"><img src="https://dn-linuxcn.qbox.me/data/attachment/album/201611/03/170526sgc4s7422pj7837g.png" width="100%" border="0"></a></div></div>
+<!--热门评论-->
+<div id="hot_comment" class="bm">
+<div class="bm_h cl">
+<h2>热点评论</h2>
+</div>
+<div class="bm_c">
+<div class="xl cl"><dl class="ptm pbm bbda cl">
+<dt class="mbm">
+<a class="xi2 xw1 vm" href="">FoamValue</a>
+<span class="xg1 xw0 vm">2015-6-11 08:41</span>
+</dt>
+<dd>mark</dd>
+<dd>
+<span class="y xw0 xi2 opt">
+<a class="replyadd" href="forum.php?mod=misc&amp;action=postreview&amp;do=support&amp;idtype=aid&amp;tid=5603&amp;pid=33472&amp;hash=817d4c3b"  onclick="showWindow('login', this.href)">赞 <span name="review_support_rep_33472">6</span></a> 
+</span>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div class="linuxcnad"></div>
+
+<div id="right_affix" style="width:350px;">
+<div class="linuxcnad">
+    </div>
+<div id="inner_nav" class="bm">
+<div class="bm_h cl">
+<h3>本文导航</h3>
+</div>
+<div class="bm_c inner_menu">
+<ul class='xl cl'><li><span class="folder">-</span><a href="article-5603-1.html#3_447">合并列表问题</a><span class="y">05%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_1196">下载仓库信息失败 -1</a><span class="y">14%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_2110">下载仓库信息失败 -2</a><span class="y">25%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_2694">下载包文件失败错误</a><span class="y">32%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_3281">部分更新错误</a><span class="y">40%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_3753">加载共享库时发生错误</a><span class="y">45%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_4393">无法获取锁 /var/cache/apt/archives/lock</a><span class="y">53%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_5337">GPG错误： 下列签名无法验证</a><span class="y">65%</span></li><li><span class="folder">-</span><a href="article-5603-1.html#3_6272">BADSIG错误</a><span class="y">76%</span></li></ul></div>
+</div>
+
+<div class="bm block">
+<div class="bm_h cl">
+<h3>相关阅读</h3>
+</div>
+<div class="bm_c pbn" id="related_tag">
+<ul class="xl xl2 cl bbs pbm" id="tag"><li><a href="tag-Ubuntu.html">Ubuntu</a></li>
+<li><a href="tag-%E6%9B%B4%E6%96%B0.html">更新</a></li>
+</ul>
+</div>
+<div class="bm_c xl xl1 cl" id="related_article">
+<ul><li><em>2011-4-1</em><a href="article-51-1-rel.html" target="_blank">Ubuntu 9.10 将于2011年4月30日停止更新服务和技术支持</a> </li>
+<li><em>2011-9-16</em><a href="article-214-1-rel.html" target="_blank">Ubuntu提议采取按月发布模式</a> </li>
+<li><em>2013-10-14</em><a href="article-2102-1-rel.html" target="_blank">Ubuntu 13.10 之于 Ubuntu 13.04，给我一个升级的理由</a> </li>
+<li><em>2013-10-19</em><a href="article-2131-1-rel.html" target="_blank">更新了有趣细节的 Unity 8</a> </li>
+<li><em>2013-10-27</em><a href="article-2174-1-rel.html" target="_blank">Ubuntu 13.10 发布 - 值得升级吗 ？</a> </li>
+<li><em>2014-3-2</em><a href="article-2613-1-rel.html" target="_blank">Ubuntu 14.04 更新 Nautilus 和加入登陆历史</a> </li>
+</ul>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+(function($){
+$(window).load(function() {
+// 顶部固顶菜单高度
+affix_topmenu = 35;
+// 可见窗口的高度
+window_height = $(window).height();
+
+// 右侧固顶区的顶部固顶条件，当滚动至此时，本区域以顶部固顶
+affix_rtop = $("#right_affix").offset().top - affix_topmenu;
+// 右侧固顶区的底部固顶条件，当滚动至此时，本区域以底部固顶
+if ($('#comment').length) {
+affix_rbottom = $('body').height() - $('#comment').offset().top - $('#comment').height() - 2;
+} else {
+affix_rbottom = $('body').height() - 2;
+}
+// 右侧固顶区的高度
+affix_rheight = $("#right_affix").height();
+if (window_height >= affix_topmenu + affix_rheight) {
+// 可见窗口可以见到全部的右侧固顶区域时，使用顶部和底部固顶条件
+affix_roffset = {top : affix_rtop, bottom: affix_rbottom};
+} else {
+// 否则，只使用顶部固顶条件（如果也设置了底部固顶条件，或导致闪烁）
+affix_roffset = {top : affix_rtop};
+}
+
+$("#right_affix").affix({offset : affix_roffset});
+
+// 左侧固顶区的顶部固顶条件，当滚动至此时，本区域以顶部固顶
+//affix_ltop = $("#add_comment").offset().top - affix_topmenu;
+//affix_loffset = {top : affix_ltop};
+
+//$("#add_comment").affix({offset : affix_loffset});
+
+// 文章内插图及注释
+
+var max_width = $("#article_content").width() - 60;
+var imgp = $("#article_content P IMG").parents("P");
+imgp.each(function(){
+$(this).addClass("article_img");
+var img = $(this).find("IMG");
+// 如果有图片描述
+var desc = null;
+if ((desc = $(this).next("P")) && desc && desc.contents() && desc.contents().first().is("EM") ) {
+  					desc.addClass("article_img_desc");
+  					desc_txt = desc.contents().first().text();
+  					img.attr({"title":desc_txt,"alt":desc_txt});
+  				} else if ((desc = img.next("BR").next("EM")) && desc.text()) {
+  					var desc_txt = desc.text();
+  					img.next("BR").remove();
+  					img.next("EM").remove();
+  					$(this).after("<p class='article_img_desc'><em>" + desc_txt + "</em></p>");
+} else {
+var desc_txt = img.attr("title") || img.attr("alt");
+if (desc_txt != '') {
+$(this).after("<p class='article_img_desc'><em>" + desc_txt + "</em></p>");
+}
+}
+if (img.attr("width") > max_width) {
+img.attr("width",'');
+img.attr("height",'');
+if (! img.parent("A").is("A")) {
+img.css("cursor","pointer");
+    img.click(function(){window.open(img.attr("src"));});
+}
+} else if (img.width() > max_width) {
+img.css("height",parseInt(img.height() * (max_width / img.attr("width"))));
+img.css("width",max_width);
+if (! img.parent("A").is("A")) {
+img.css("cursor","pointer");
+img.click(function(){window.open(img.attr("src"));});
+}
+}
+});
+
+// 链接
+var re_sitelink = /^https?:\/\/(www.)?linux(.net)?.cn\//i;
+$("#article_content a").map(function(){
+if (re_sitelink.test($(this).attr('href'))) {
+if ($(this).text() == 'Linux中国') $(this).attr('href',$(location).attr('href'));
+} else {
+$(this).addClass("ext").attr({"rel":"external nofollow","target":"_blank"});
+}
+});
+
+// 视频
+$("video").map(function() {
+width = $(this).attr("width");
+height = $(this).attr("height");
+$(this).wrap("<div class='videoContainer'></div>").parent()
+.css({width: width,height : height});
+});
+})
+})(jQuery);
+</script>
+<div class="drag">
+<!--[diy=diy2]--><div id="diy2" class="area"></div><!--[/diy]-->
+</div>
+
+
+</div>
+</div>
+
+
+<div class="wp mtn">
+<!--[diy=diy3]--><div id="diy3" class="area"></div><!--[/diy]-->
+</div>
+<input type="hidden" id="portalview" value="1">
+
+<link rel="stylesheet" href="https://dn-linuxcn.qbox.me/static/js/prettify/prettify.css?a0R" type="text/css" />
+<script src="https://dn-linuxcn.qbox.me/static/js/prettify/prettify.min.js?a0R" type="text/javascript"></script>
+<script type="text/javascript">
+var sourceBaseUrl = "https://dn-linuxcn.qbox.me/static/js/tinymce/plugins/prettify";
+prettyPrint();
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>	</div>
+
+
+    <div id="footer">
+        <p>
+            <span>Linux.CN &copy; 2003-2016 Linux中国</span>
+            <span class="line">|</span>
+            <span>Powered by <strong>DX</strong> | 图片存储于<a href="http://www.qiniu.com/" target="_blank">七牛云</a></span>
+        </p>
+        <p>
+            <a href="http://www.miitbeian.gov.cn/" target="_blank">京ICP备05083684号-1</a>            京公网安备110105001595
+        </p>
+        <p>
+        <a href="https://linux.cn/legal.html">服务条款</a> |
+        除特别申明外，本站原创内容版权遵循 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh" target="_blank">CC-BY-NC-SA 协议规定</a></p>
+        <p>
+        <a href="https://linux.cn/"><img src="https://dn-linuxcn.qbox.me/static/image/common/linuxcn_logo_mini.png" align="absmiddle" /></a>
+        <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img src="https://dn-linuxcn.qbox.me/static/image/common/cc.png" align="absmiddle" /></a>
+        </p>
+<p>
+</p>
+</div>
+
+<div id="ft" class="cl"></div>
+<script src="home.php?mod=misc&ac=sendmail&rand=1479815908" type="text/javascript"></script>
+<div id="scrolltop">
+<span>
+<a href="javascript:void();" class="wxicon" onmouseover="show_qrcode(event,'#qrcode', SITEURL + 'article-5603-1-wx.html');" onmouseout="show_qrcode(event,'#qrcode','');"></a>
+<a title="分享到新浪微博" href="javascript:void( share_tsina(SITEURL + 'article-5603-1.html','article_title','article_content','https://dn-linuxcn.qbox.me/data/attachment/album/201506/11/000209ot1y6b7yyrty1wew.jpg') );" class="tsina"></a>
+<a title="收藏" href="home.php?mod=spacecp&amp;ac=favorite&amp;type=article&amp;id=5603&amp;handlekey=favoritearticlehk_5603" id="a_favorite" onclick="showWindow(this.id, this.href, 'get', 0);" class="favorite" title="收藏"></a>
+</span>
+<span hidefocus="true"><a title="返回顶部" onclick="window.scrollTo('0','0')" class="scrolltopa" ><b>返回顶部</b></a></span>
+</div>
+<script type="text/javascript">_attachEvent(window, 'scroll', function () { showTopLink(); });</script>
+<div id="qrcode">
+<p>分享到微信朋友圈</p>
+<div id="canvas"></div>
+<p><em>打开微信，点击底部的“发现”，<br />
+使用“扫一扫”将网页分享至朋友圈。</em></p></div>
+<script src="https://dn-linuxcn.qbox.me/static/js/ads.js?a0R" type="text/javascript"></script>
+<div id="La0RCisOsS" style="display: none; background-color: #A00; position: fixed; top: 0; width: 100%; z-index: 9999; left: 0; font-size: 16px; color: #fff; text-align: center; padding: 0;">请将我们加入您的广告过滤器的白名单，请支持开源站点。谢谢您。</div>
+<script type="text/javascript">
+(function($){
+$(window).load(function() {
+if ($('#pleaseRemoveOurSiteFromBlackList').length == 0 && $(window).width() >= 480) {
+$('#La0RCisOsS').css('display','block');
+}
+if (location.href.substr(0,17) != 'https://linux.cn/') {
+location.href = 'https://linux.cn/';
+}
+});
+})(jQuery);
+</script>
+</body>
+</html>
