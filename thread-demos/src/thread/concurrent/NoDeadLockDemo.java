@@ -14,10 +14,18 @@ class Resource {
     void cooperate(Resource res) {
         while (true) {
             try {
+                
+//                取得目前与传入的 Resource 的 Lock 锁定
+//                  如果两个 Resource 的 Lock 都取得锁定，才执行资源整合
                 if (lockMeAnd(res)) {
                     System.out.printf(" %s cooperate %s resource %n", this.name, res.name);
+                    
+//                    资源整合成功，离开循环
+                    break;
                 }
             } finally {
+                
+//                解除目前与传入的 Resource 的 Lock 锁定
                 unLockMeAnd(res);
             }
         }
@@ -65,12 +73,15 @@ public class NoDeadLockDemo {
 
 
 /*
- ...
+run:
+ res1 cooperate res2 resource 
+ res1 cooperate res2 resource 
+ res1 cooperate res2 resource 
+ res1 cooperate res2 resource 
  res1 cooperate res2 resource 
  res2 cooperate res1 resource 
  res2 cooperate res1 resource 
- res1 cooperate res2 resource 
- res1 cooperate res2 resource 
- res1 cooperate res2 resource 
- ...
+ res2 cooperate res1 resource 
+ res2 cooperate res1 resource 
+ res2 cooperate res1 resource 
 */
