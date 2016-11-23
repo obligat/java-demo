@@ -5,7 +5,7 @@ public class StringOrderDemo {
 
     public static void main(String[] args) {
         String[] names = {"Justin", "caterpillar", "Bush"};
-        Arrays.sort(names, StringOrder::byLength);
+        Arrays.sort(names, StringOrder::byLexicographyIgnoreCase);
         System.out.println(Arrays.toString(names));
     }
 }
@@ -13,5 +13,5 @@ public class StringOrderDemo {
 
 /*
 run:
-[Bush, Justin, caterpillar]
+[Bush, caterpillar, Justin]
 */
