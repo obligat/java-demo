@@ -9,18 +9,18 @@ public class RobotTimeDemo {
     public static void main(String[] args) {
         Calendar c = Calendar.getInstance();
         c.set(1975,Calendar.MARCH,31,23,59,59);
-        out.println(c.getTime());
+        out.println(c.getTime().getTime());
         c.add(Calendar.SECOND, 1);
-        out.println(c.getTime());
+        out.println(c.getTime().getTime());
     }
 }
 
 /*
 run:
-Mon Mar 31 23:59:59 CST 1975
-Tue Apr 01 00:00:00 CST 1975
+165513599938
+165513600938
 */
 
 /*
-But not appear Daylight Saving Time .
+ get epoch seconds is really credibility.
 */
